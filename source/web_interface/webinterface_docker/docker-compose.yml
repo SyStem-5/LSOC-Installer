@@ -1,0 +1,93 @@
+version: '3.3'
+
+services:
+  django:
+    build: ./django
+    restart: on-failure
+    command: daphne project01.asgi:application --bind 0.0.0.0
+    container_name: lsoc_webinterface_django
+    volumes:
+      - static_volume:/usr/src/djangoapp/staticfiles
+      - media_volume:/usr/src/djangoapp/mediafiles
+    secrets:
+      - secret_key
+      - sql_user
+      - sql_pass
+    environment:
+      - SECRETS_LOCATION=/run/secrets/
+#      - SECRET_KEY=INSECURE
+      - SQL_ENGINE=django.db.backends.postgresql
+      - SQL_DATABASE=postgres
+#      - SQL_USER=postgres
+#      - SQL_PASSWORD=postgres
+      - SQL_HOST=postgres
+      - SQL_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    networks:
+      - nginx_network
+      - postgres_network
+      - redis_network
+      - mosquitto_network
+    depends_on:
+      - redis
+      - postgres
+
+  nginx:
+    build: ./nginx
+    restart: on-failure
+    container_name: lsoc_webinterface_nginx
+    volumes:
+      - static_volume:/usr/src/djangoapp/staticfiles
+      - media_volume:/usr/src/djangoapp/mediafiles
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - nginx_network
+    depends_on:
+      - django
+
+  redis:
+    image: redis:5.0-alpine
+    restart: on-failure
+    container_name: lsoc_webinterface_redis
+    networks:
+      - redis_network
+
+  postgres:
+    image: postgres:11-alpine
+    restart: on-failure
+    container_name: lsoc_webinterface_postgres
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
+    secrets:
+      - sql_pass
+    environment:
+      - POSTGRES_PASSWORD_FILE=/run/secrets/sql_pass
+    networks:
+      - postgres_network
+
+networks:
+  nginx_network:
+    driver: bridge
+  postgres_network:
+    driver: bridge
+  redis_network:
+    driver: bridge
+  mosquitto_network:
+    driver: bridge
+
+volumes:
+  postgres_volume:
+  static_volume:
+  media_volume:
+
+secrets:
+  secret_key: 
+    file: secret_key.txt
+  sql_user: 
+    file: sql_user.txt
+  sql_pass: 
+    file: sql_pass.txt
+    

@@ -1,0 +1,11 @@
+[Unit]
+Description=LSOC System controller
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/bin/black_box -d
+#Environment="RUST_BACKTRACE=1"
+
+[Install]
+WantedBy=multi-user.target
