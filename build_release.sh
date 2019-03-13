@@ -24,6 +24,9 @@ rsync --info=progress2 source/ufw_setup/firewall_setup.sh $release_dir/ufw_setup
 
 if [ "$1" == "--download" ]; then
     rsync -a source/mosquitto                       $release_dir --exclude *.tar
+    git clone https://github.com/SyStem-5/Mosquitto-Auth-DockerImage.git $release_dir/mosquitto
+    mv $release_dir/mosquitto/Mosquitto-Auth-DockerImage $release_dir/mosquitto/mosquitto_docker
+
     rsync -a source/postgres                        $release_dir --exclude *.tar
 else
     rsync --info=progress2 source/docker.deb        $release_dir/packages/
