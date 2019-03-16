@@ -1,9 +1,7 @@
 #!/bin/bash
 
-release_dir_base=build
-
 echo "Building Release"
-release_dir=$release_dir_base/LSOCInstaller
+release_dir=build/LSOCInstaller
 rm -rf $release_dir
 
 mkdir -p $release_dir
