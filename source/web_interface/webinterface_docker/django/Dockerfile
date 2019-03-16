@@ -18,10 +18,11 @@ RUN apk update \
 RUN pip install --upgrade pip \
     && pip install pipenv
 #RUN pip install pipenv
-COPY ./Pipfile /usr/src/djangoapp/Pipfile
-RUN pipenv install --skip-lock --system \
+COPY app/Pipfile /usr/src/djangoapp/Pipfile
+COPY app/Pipfile.lock /usr/src/djangoapp/Pipfile.lock
+RUN pipenv install --ignore-pipfile \
     && apk del build-deps
-# --dev
+# --skip-lock --system --dev
 
 # Copy entrypoint.sh
 COPY ./entrypoint.sh /entrypoint.sh
