@@ -17,6 +17,8 @@ rsync --info=progress2 source/ufw_setup/firewall_setup.sh $release_dir/ufw_setup
 rsync -a source/mosquitto                       $release_dir --exclude *.tar
 git clone https://github.com/SyStem-5/Mosquitto-Auth-DockerImage.git $release_dir/mosquitto/mosquitto_docker
 
+git clone https://github.com/SyStem-5/Mosquitto-Auth-Plugin.git $release_dir/mosquitto/mosquitto_docker/mosquitto-auth-plugin
+
 rsync -a source/postgres                        $release_dir --exclude *.tar
 
 
