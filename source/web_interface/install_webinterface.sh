@@ -27,11 +27,11 @@ chmod 740 webinterface_docker
 
 cd webinterface_docker/
 
-secret_key=$(strings /dev/urandom | grep -o '[[:alnum:]]' | head -n 50 | tr -d '\n'; echo)
+secret_key=$(openssl rand -base64 55)
 echo $secret_key >> secret_key.txt
 
 echo "postgres" >> sql_user.txt
-sql_pass=$(strings /dev/urandom | grep -o '[[:alnum:]]' | head -n 15 | tr -d '\n'; echo)
+sql_pass=$(openssl rand -base64 32)
 echo $sql_pass >> sql_pass.txt
 
 echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Loading Docker container."
@@ -43,7 +43,7 @@ username=${username:-admin}
 
 read -p $'\e[1m\e[45mWeb Interface Installer\e[0m: Set Web Interface Email. Press [ENTER] to skip. ' -r email
 
-pass=$(strings /dev/urandom | grep -o '[[:alnum:]]' | head -n 10 | tr -d '\n'; echo)
+pass=$(openssl rand -base64 32)
 
 docker exec -i -t $(sudo docker ps -aqf "name=lsoc_webinterface_django") /bin/ash -c \
 "echo \"from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('$username', '$email', '$pass')\" | python manage.py shell"
