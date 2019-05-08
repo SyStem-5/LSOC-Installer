@@ -21,7 +21,7 @@ useradd $usrmqtt -u 1003
 
 usermod -a -G $usrmqttgroup $usrmqtt
 
-pass=$(strings /dev/urandom | grep -o '[[:alnum:]]' | head -n 30 | tr -d '\n'; echo)
+pass=$(openssl rand -base64 32)
 echo "$usrmqtt:$pass" | sudo chpasswd
 
 mkdir $mqtt_base_loc

@@ -13,7 +13,7 @@ bb_config_base_loc=/etc/BlackBox
 postgres_package=postgres:11-alpine
 postgres_container_local=postgres/postgres.tar
 #Generate the password for postgresql(docker image) and save it to /etc/BlackBox name: postgresql_bb.creds
-creds=$(strings /dev/urandom | grep -o '[[:alnum:]]' | head -n 30 | tr -d '\n'; echo)
+creds=$(openssl rand -base64 32)
 echo $creds >> $bb_config_base_loc/postgresql_bb.creds
 
 #Copy the script for running postgresql docker container
