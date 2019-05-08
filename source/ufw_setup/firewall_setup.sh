@@ -16,4 +16,3 @@ ufw allow 8883/tcp
 echo -e "\e[1m\e[44mLSOC Installer\e[0m: Enabling firewall..."
 
 ufw enable
-
