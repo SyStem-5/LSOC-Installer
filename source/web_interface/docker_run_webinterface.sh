@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo '{"version":"0.1.0"}' > '/etc/BlackBox/webinterface_version.json'
+echo '0.1.0' > '/etc/BlackBox/webinterface.version'
 
 wi_base_loc=/etc/BlackBox/webinterface_docker/
 cd $wi_base_loc
@@ -14,4 +14,4 @@ sudo docker network connect webinterfacedocker_mosquitto_network mqtt
 sudo sysctl vm.overcommit_memory=1
 sudo echo never > /sys/kernel/mm/transparent_hugepage/enabled
 
-sudo docker-compose up -d --build 
+sudo docker-compose up -d --build
