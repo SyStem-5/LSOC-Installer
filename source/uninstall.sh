@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ $EUID -ne 0 ]]; then
-   echo "This script must be ran as root." 
+   echo "This script must be ran as root."
    exit 1
 fi
 
@@ -18,8 +18,12 @@ bb_bin_loc=/bin/black_box
 bb_config_loc=/etc/BlackBox
 mqtt_config_loc=/etc/mosquitto
 
-echo "Removing crontab settings..."
-crontab -r
+read -p "Reset crontab? [y/N] " -r
+REPLY=${REPLY:-n}
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo "Removing crontab settings..."
+    crontab -r
+fi
 
 echo "Removing users..."
 userdel usrmqttcontainer
@@ -69,7 +73,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     docker rm --force lsoc_webinterface_django lsoc_webinterface_nginx lsoc_webinterface_postgres redis
 fi
 
-#Ask to remove volumes we created 
+#Ask to remove volumes we created
 read -p "Remove volumes installed by LSOC installer? [y/N] " -r
 REPLY=${REPLY:-n}
 if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -77,7 +81,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     docker volume rm postgres_volume static_volume media_volume
 fi
 
-#Ask to remove networks we created 
+#Ask to remove networks we created
 read -p "Remove networks installed by LSOC installer? [y/N] " -r
 REPLY=${REPLY:-n}
 if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -85,7 +89,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     docker network rm nginx_network postgres_network redis_network mosquitto_network
 fi
 
-#Ask to prune docker (remove unnecesary images, volumes, networks, containers) 
+#Ask to prune docker (remove unnecesary images, volumes, networks, containers)
 read -p "Prune docker (including volumes)? [y/N] " -r
 REPLY=${REPLY:-n}
 if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -112,4 +116,3 @@ ufw reset
 echo "Uninstall completed."
 
 read -p "Press [Enter] to exit."
-
