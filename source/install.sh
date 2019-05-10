@@ -48,13 +48,9 @@ fi
 
 #rm -rf /etc/BlackBox
 
-lib_loc=/usr/local/
 bb_config_base_loc=/etc/BlackBox/
 
 docker_io_local=packages/docker.deb
-
-cp -r lib $lib_loc
-ldconfig /usr/local/lib
 
 mkdir $bb_config_base_loc
 chown root:root $bb_config_base_loc
