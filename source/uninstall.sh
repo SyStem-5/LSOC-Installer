@@ -31,25 +31,6 @@ userdel usrmqttcontainer
 echo "Removing groups..."
 groupdel mqttcontainergroup
 
-#Remove pahomqtt lib files
-#rm $lib_loc*
-rm $lib_loc/libpaho-mqtt3a.so
-rm $lib_loc/libpaho-mqtt3a.so.1
-rm $lib_loc/libpaho-mqtt3a.so.1.0
-#
-rm $lib_loc/libpaho-mqtt3as.so
-rm $lib_loc/libpaho-mqtt3as.so.1
-rm $lib_loc/libpaho-mqtt3as.so.1.0
-#
-rm $lib_loc/libpaho-mqtt3c.so
-rm $lib_loc/libpaho-mqtt3c.so.1
-rm $lib_loc/libpaho-mqtt3c.so.1.0
-#
-rm $lib_loc/libpaho-mqtt3cs.so
-rm $lib_loc/libpaho-mqtt3cs.so.1
-rm $lib_loc/libpaho-mqtt3cs.so.1.0
-
-
 rm $bb_bin_loc
 
 systemctl disable blackbox.service

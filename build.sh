@@ -20,8 +20,6 @@ git clone --recurse-submodules https://github.com/SyStem-5/Mosquitto-Auth-Docker
 rsync -a source/postgres                        $build_dir --exclude *.tar
 
 
-rsync -a --info=progress2 source/lib            $build_dir
-
 rsync -a --info=progress2 source/web_interface  $build_dir
 
 rsync -a --info=progress2 ../LSOC-WebInterface/ $build_dir/web_interface/webinterface_docker/django/app \
