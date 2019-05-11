@@ -13,7 +13,6 @@ then
     [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
 fi
 
-lib_loc=/usr/local/lib/
 bb_bin_loc=/bin/black_box
 bb_config_loc=/etc/BlackBox
 mqtt_config_loc=/etc/mosquitto
@@ -40,9 +39,6 @@ rm -f -r $bb_config_loc
 
 rm -f -r $mqtt_config_loc
 
-#Rebuilds the statically linked library links
-#Needed because we remove some libraries
-ldconfig
 
 #Ask to remove containers we created
 read -p "Remove docker containers installed by LSOC installer? [y/N] " -r
