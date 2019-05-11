@@ -1,0 +1,13 @@
+[Unit]
+Description=LSOC System updater
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/bin/neutron_communicator
+#This is to stop NECO from thinking it is not root when being run as a service
+Environment="USER=root"
+#"RUST_BACKTRACE=1"
+
+[Install]
+WantedBy=multi-user.target

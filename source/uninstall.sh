@@ -13,6 +13,8 @@ then
     [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
 fi
 
+neco_bin_loc=/bin/neutron_communicator
+neco_config_loc=/etc/NeutronCommunicator
 bb_bin_loc=/bin/black_box
 bb_config_loc=/etc/BlackBox
 mqtt_config_loc=/etc/mosquitto
@@ -29,6 +31,16 @@ userdel usrmqttcontainer
 
 echo "Removing groups..."
 groupdel mqttcontainergroup
+
+### NECO ###
+rm $neco_bin_loc
+
+systemctl stop neutroncommunicator.service
+systemctl disable neutroncommunicator.service
+rm -rf /etc/systemd/system/neutroncommunicator.service
+
+rm -f -r $neco_config_loc
+### ###
 
 rm $bb_bin_loc
 

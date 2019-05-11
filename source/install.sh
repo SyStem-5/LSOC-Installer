@@ -56,6 +56,9 @@ mkdir $bb_config_base_loc
 chown root:root $bb_config_base_loc
 chmod 700 $bb_config_base_loc
 
+#Run NECO setup script
+./neutron_communicator/install.sh
+
 echo -e "\e[1m\e[44mLSOC Installer\e[0m: Installing BlackBox"
 cp blackbox/black_box /bin/
 chown root:root /bin/black_box
