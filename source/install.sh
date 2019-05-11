@@ -48,25 +48,10 @@ fi
 
 #rm -rf /etc/BlackBox
 
-bb_config_base_loc=/etc/BlackBox/
-
 docker_io_local=packages/docker.deb
-
-mkdir $bb_config_base_loc
-chown root:root $bb_config_base_loc
-chmod 700 $bb_config_base_loc
 
 #Run NECO setup script
 ./neutron_communicator/install.sh
-
-echo -e "\e[1m\e[44mLSOC Installer\e[0m: Installing BlackBox"
-cp blackbox/black_box /bin/
-chown root:root /bin/black_box
-chmod 700 /bin/black_box
-
-cp blackbox/blackbox.service /etc/systemd/system/
-systemctl enable blackbox.service
-echo -e "\e[1m\e[44mLSOC Installer\e[0m: BlackBox installation complete."
 
 #Run ufw setup script
 ./ufw_setup/firewall_setup.sh
@@ -111,19 +96,8 @@ echo "
 #Run the PostgreSQL installation
 ./postgres/install_postgresql.sh
 
-read -p $'\e[1m\e[44mLSOC Installer\e[0m: Default settings file is going to be generated, please edit the file responsibly. To continue press [ENTER] ' -r
-black_box gen_settings
-nano /etc/BlackBox/settings.json
-
-read -p $'\e[1m\e[44mLSOC Installer\e[0m: Generate Mosquitto configuration file? [Y/n] ' -r
-REPLY=${REPLY:-y}
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    #Just to be sure, we create a directory
-    #This assumes the configuration is saved to /etc/mosquitto/
-    mkdir /etc/mosquitto
-    black_box gen_mosquitto_conf
-    nano /etc/mosquitto/mosquitto.conf
-fi
+#Run BlackBox setup script
+./blackbox/install.sh
 
 ##Run BlackBox so we can configure the database as soon as possible
 systemctl start blackbox.service
