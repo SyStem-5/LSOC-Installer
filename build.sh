@@ -15,7 +15,19 @@ rsync --info=progress2 source/ufw_setup/firewall_setup.sh $build_dir/ufw_setup/
 
 
 rsync -a source/mosquitto                       $build_dir --exclude *.tar
-git clone --recurse-submodules https://github.com/SyStem-5/Mosquitto-Auth-DockerImage.git $build_dir/mosquitto/mosquitto_docker
+#git clone --recurse-submodules https://github.com/SyStem-5/Mosquitto-Auth-DockerImage.git $build_dir/mosquitto/mosquitto_docker
+rsync -a --info=progress2 ../Mosquitto-Auth-DockerImage/ $build_dir/mosquitto/mosquitto_docker \
+    --exclude .vscode \
+    --exclude .git \
+    --exclude .gitignore \
+    --exclude .gitmodules
+
+rsync -a --info=progress2 ../Mosquitto-Auth-Plugin/ $build_dir/mosquitto/mosquitto_docker/Mosquitto-Auth-Plugin \
+    --exclude .vscode \
+    --exclude .git \
+    --exclude .gitignore \
+    --exclude .gitmodules
+
 
 rsync -a source/postgres                        $build_dir --exclude *.tar
 
