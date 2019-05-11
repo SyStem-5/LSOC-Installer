@@ -47,7 +47,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "Removing containers..."
     docker rm --force mqtt
     docker rm --force database_postgres
-    docker rm --force lsoc_webinterface_django lsoc_webinterface_nginx lsoc_webinterface_postgres redis
+    docker rm --force lsoc_webinterface_django lsoc_webinterface_nginx lsoc_webinterface_postgres lsoc_webinterface_redis
 fi
 
 #Ask to remove volumes we created
