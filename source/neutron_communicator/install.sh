@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo -e "\e[1m\e[44mLSOC Installer\e[0m: Installing Neutron Communicator"
 
 bin_name=neutron_communicator
