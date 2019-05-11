@@ -32,6 +32,7 @@ groupdel mqttcontainergroup
 
 rm $bb_bin_loc
 
+systemctl stop blackbox.service
 systemctl disable blackbox.service
 rm -rf /etc/systemd/system/blackbox.service
 
