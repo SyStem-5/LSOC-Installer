@@ -8,7 +8,9 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
 fi
 
-bb_config_base_loc=/etc/BlackBox
+# We can create it here, it doesn't matter if it fails or doesn't, permissions will be set anyway
+bb_config_base_loc=/etc/BlackBox/
+mkdir $bb_config_base_loc
 
 postgres_package=postgres:11-alpine
 postgres_container_local=postgres/postgres.tar
