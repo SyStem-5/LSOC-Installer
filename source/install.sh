@@ -48,8 +48,6 @@ fi
 
 #rm -rf /etc/BlackBox
 
-docker_io_local=packages/docker.deb
-
 #Run NECO setup script
 ./neutron_communicator/install.sh
 
@@ -68,26 +66,8 @@ if hash docker 2>/dev/null; then
         apt -y install docker.io
     fi
 else
-    #Check if we have the local copy and then ask for decision
-    if [ -f $docker_io_local ]; then
-        read -p $'\e[1m\e[44mLSOC Installer\e[0m: Download the latest docker version? [Y/n] ' -r
-        REPLY=${REPLY:-y}
-        echo    #Move to a new line
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            echo -e "\e[1m\e[44mLSOC Installer\e[0m: Downloading & Installing the latest Docker version.
-            "
-            apt -y install docker.io
-        else
-            echo -e "\e[1m\e[44mLSOC Installer\e[0m: Using Docker version provided by the installation.
-            "
-            dpkg -i $docker_io_local
-            #Fix dependencies
-            #sudo apt-get install -f
-        fi
-    else
-        echo -e "\e[1m\e[44mLSOC Installer\e[0m: Downloading & Installing the latest Docker version."
-        apt -y install docker.io
-    fi
+    echo -e "\e[1m\e[44mLSOC Installer\e[0m: Downloading & Installing the latest Docker version."
+    apt -y install docker.io
 fi
 
 echo "
