@@ -15,11 +15,8 @@ services:
       - sql_pass
     environment:
       - SECRETS_LOCATION=/run/secrets/
-#      - SECRET_KEY=INSECURE
       - SQL_ENGINE=django.db.backends.postgresql
       - SQL_DATABASE=postgres
-#      - SQL_USER=postgres
-#      - SQL_PASSWORD=postgres
       - SQL_HOST=postgres
       - SQL_PORT=5432
       - REDIS_HOST=redis
@@ -84,10 +81,9 @@ volumes:
   media_volume:
 
 secrets:
-  secret_key: 
+  secret_key:
     file: secret_key.txt
-  sql_user: 
+  sql_user:
     file: sql_user.txt
-  sql_pass: 
+  sql_pass:
     file: sql_pass.txt
-    
