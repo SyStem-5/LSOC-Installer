@@ -45,6 +45,10 @@ read -p $'\e[1m\e[45mWeb Interface Installer\e[0m: Set Web Interface Email. Pres
 
 pass=$(openssl rand -base64 32)
 
+echo "Waiting for WebInterface to go online..."
+
+sleep 60
+
 docker exec -i -t $(sudo docker ps -aqf "name=lsoc_webinterface_django") /bin/ash -c \
 "echo \"from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('$username', '$email', '$pass')\" | python manage.py shell"
 
