@@ -34,6 +34,11 @@ echo "postgres" >> sql_user.txt
 sql_pass=$(openssl rand -base64 32)
 echo $sql_pass >> sql_pass.txt
 
+openssl req \
+       -newkey rsa:2048 -nodes -keyout site.key \
+       -x509 -days 750 -out site.crt \
+       -subj "/C=HR/ST=Croatia"
+
 echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Loading Docker container."
 
 docker-compose up -d --build
