@@ -37,6 +37,9 @@ services:
     volumes:
       - static_volume:/usr/src/djangoapp/staticfiles
       - media_volume:/usr/src/djangoapp/mediafiles
+    secrets:
+      - site_crt
+      - site_key
     ports:
       - 80:80
       - 443:443
@@ -87,3 +90,7 @@ secrets:
     file: sql_user.txt
   sql_pass:
     file: sql_pass.txt
+  site_crt:
+    file: site.crt
+  site_key:
+    file: site.key
