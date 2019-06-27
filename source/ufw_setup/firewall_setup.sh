@@ -10,6 +10,8 @@ echo -e "\e[1m\e[44mLSOC Installer\e[0m: Setting firewall rules..."
 
 #Nginx
 ufw allow https
+ufw allow http
+
 #MQTT Secure
 ufw allow 8883/tcp
 
