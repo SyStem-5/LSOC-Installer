@@ -53,7 +53,7 @@ fi
 ./neutron_communicator/install.sh
 
 #Run ufw setup script
-./ufw_setup/firewall_setup.sh
+./ufw/setup.sh
 
 #Install docker
 echo "--------------------------
