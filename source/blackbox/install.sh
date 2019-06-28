@@ -1,48 +1,85 @@
 #!/bin/bash
 
-echo -e "\e[1m\e[44mLSOC Installer\e[0m: Installing BlackBox"
+# Set the workdir to the directory the script is in
+cd "$(dirname "$0")"
 
-### VARIABLES ###
-bin_loc=/bin/black_box
-bin_source=blackbox/black_box
-#
-service_loc=/etc/systemd/system/blackbox.service
-service_source=blackbox/blackbox.service
-#
-bb_config_dir=/etc/BlackBox/
-bb_settings_file_loc=/etc/BlackBox/settings.json
-#
-mosquitto_config_dir=/etc/mosquitto/
-mosquitto_config_file=/etc/mosquitto/mosquitto.conf
+# If no arguments are specified, exit
+if [ -z "$1" ]; then
+    echo "No configuration base directory specified. Exiting..."
+    exit 1
+fi
+
+# If the mosquitto configuration directory hasn't been specified
+# Set it to the default value
+if [ -z "$2" ]; then
+    echo -e "\e[1m\e[45mBlackBox Installer\e[0m: No mosquitto configuration directory specified, using default: '/etc/mosquitto'"
+    mosquitto_config_dir=/etc/mosquitto
+fi
+
+echo -e "\e[1m\e[45mBlackBox Installer\e[0m: Installing BlackBox"
+
+config_dir_path=$1
+
+binary_name=black_box
+binary_destination=/bin/$binary_name
+
+bb_gen_settings_cmd=gen_settings
+bb_gen_mqtt_settings_cmd=gen_mosquitto_conf
+
+service_source=blackbox.service
+service_destination=/etc/systemd/system/$service_source
+
+bb_settings_file_loc=$config_dir_path/settings.json
+mosquitto_config_file=$mosquitto_config_dir/mosquitto.conf
 
 # BB create the config folder and set permissions
-mkdir $bb_config_dir
-chown root:root $bb_config_dir
-chmod 700 $bb_config_dir
+echo -e "\e[1m\e[45mBlackBox Installer\e[0m: Creating the configuration directory. Path: $config_dir_path."
+mkdir $config_dir_path
 
-# Copy the binary and set permissions
-cp $bin_source $bin_loc
-chown root:root $bin_loc
-chmod 700 $bin_loc
+echo -e "\e[1m\e[45mBlackBox Installer\e[0m: Setting permissions..."
+chown -R root:root $config_dir_path
+chmod -R 700 $config_dir_path
 
-# BB Config file setup
-read -p $'\e[1m\e[44mLSOC Installer\e[0m: Default BlackBox settings file is going to be generated, please edit the file responsibly. To continue press [ENTER] ' -r
-black_box gen_settings
-nano $bb_settings_file_loc
+echo -e "\e[1m\e[45mBlackBox Installer\e[0m: Deploying the binary..."
+cp $binary_name $binary_destination
+
+echo -e "\e[1m\e[45mBlackBox Installer\e[0m: Setting the permissions..."
+chown root:root $binary_destination
+chmod 700 $binary_destination
+
+echo -e "\e[1m\e[45mBlackBox Installer\e[0m: Generating default settings..."
+black_box $bb_gen_settings_cmd
+
+read -p $'\e[1m\e[45mBlackBox Installer\e[0m: Edit the configuration file? [y/N] ' -r
+REPLY=${REPLY:-n}
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    nano $bb_settings_file_loc
+fi
 
 # Mosquitto config setup
-read -p $'\e[1m\e[44mLSOC Installer\e[0m: Generate Mosquitto configuration file? [Y/n] ' -r
+read -p $'\e[1m\e[45mBlackBox Installer\e[0m: Generate Mosquitto configuration file? [Y/n] ' -r
 REPLY=${REPLY:-y}
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     #Just to be sure, we create a directory
     #This assumes the configuration is saved to /etc/mosquitto/
     mkdir $mosquitto_config_dir
-    black_box gen_mosquitto_conf
-    nano $mosquitto_config_file
+    black_box $bb_gen_mqtt_settings_cmd
+
+    read -p $'\e[1m\e[45mBlackBox Installer\e[0m: Edit the configuration file? [y/N] ' -r
+    REPLY=${REPLY:-n}
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        nano $mosquitto_config_file
+    fi
 fi
 
 # Service setup
-cp $service_source $service_loc
-chmod 750 $service_loc
-systemctl enable blackbox.service
-echo -e "\e[1m\e[44mLSOC Installer\e[0m: BlackBox installation complete."
+echo -e "\e[1m\e[45mBlackBox Installer\e[0m: Copying the service file..."
+cp $service_source $service_destination
+
+echo -e "\e[1m\e[45mBlackBox Installer\e[0m: Setting permissions..."
+chmod 750 $service_destination
+
+echo -e "\e[1m\e[45mBlackBox Installer\e[0m: Enabling service..."
+systemctl enable $service_source
+
+echo -e "\e[1m\e[45mBlackBox Installer\e[0m: Installation complete."
