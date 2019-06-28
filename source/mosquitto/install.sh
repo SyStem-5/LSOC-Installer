@@ -43,13 +43,11 @@ usermod -a -G $usrmqttgroup $usrmqtt
 pass=$(openssl rand -base64 32)
 echo "$usrmqtt:$pass" | sudo chpasswd
 
-echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Creating mosquitto configuration directory..."
-mkdir $mqtt_base_loc
 
-echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Copying default settings..."
-#Copy the default configuration file so we can make sure the broker is restricted to localhost and set the permissions
-#Also, don't overwrite if a config file exists already
-cp -n mosquitto_docker/default_mosquitto.conf $mqtt_base_loc/mosquitto.conf
+if [ ! -d "$mqtt_base_loc" ]; then
+    echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Creating mosquitto configuration directory..."
+    mkdir $mqtt_base_loc
+fi
 
 echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Setting permissions..."
 #Make the directory and everything in it root:rwx usrmqttcontainer:r
