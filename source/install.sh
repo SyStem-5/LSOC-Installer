@@ -83,7 +83,7 @@ echo "
 systemctl start blackbox.service
 
 #Run the Mosquitto Broker installation
-./mosquitto/install.sh
+./mosquitto/install.sh /etc/BlackBox
 
 #Run the Web Interface installation
 ./web_interface/install.sh
