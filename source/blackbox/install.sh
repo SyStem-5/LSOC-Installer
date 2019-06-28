@@ -14,6 +14,8 @@ fi
 if [ -z "$2" ]; then
     echo -e "\e[1m\e[45mBlackBox Installer\e[0m: No mosquitto configuration directory specified, using default: '/etc/mosquitto'"
     mosquitto_config_dir=/etc/mosquitto
+else
+    mosquitto_config_dir=$2
 fi
 
 echo -e "\e[1m\e[45mBlackBox Installer\e[0m: Installing BlackBox"
