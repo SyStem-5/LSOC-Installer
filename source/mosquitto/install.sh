@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Set the workdir to the directory the script is in
+cd "$(dirname "$0")"
+
 read -p $'\e[1m\e[45mMosquitto Installer\e[0m: Install Mosquitto? [Y/n] ' -r REPLY
 REPLY=${REPLY:-y}
 echo    #Move to a new line
@@ -31,7 +34,7 @@ mkdir $mqtt_base_loc
 echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Copying default settings..."
 #Copy the default configuration file so we can make sure the broker is restricted to localhost and set the permissions
 #Also, don't overwrite if a config file exists already
-cp -r -n mosquitto/mosquitto_docker/default_mosquitto.conf $mqtt_base_loc/mosquitto.conf
+cp -n mosquitto_docker/default_mosquitto.conf $mqtt_base_loc/mosquitto.conf
 
 echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Setting permissions..."
 #Make the directory and everything in it root:rwx usrmqttcontainer:r
@@ -39,15 +42,14 @@ chown -R root:$usrmqttgroup $mqtt_base_loc
 chmod -R 740 $mqtt_base_loc
 
 echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Copying docker run command file..."
-cp mosquitto/mosquitto_docker/docker_run.sh $bb_config_base_loc/docker_run_mosquitto
+cp mosquitto_docker/docker_run.sh $config_base_loc/docker_run_mosquitto
 
 echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Copying mosquitto version file..."
-cp mosquitto/mosquitto_docker/version $bb_config_base_loc/mosquitto.version
+cp mosquitto_docker/version $config_base_loc/mosquitto.version
 
 echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Installing docker image..."
 
-cd mosquitto/mosquitto_docker/
-docker build -t mosquitto .
+docker build -t mosquitto mosquitto_docker/
 
 echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Running docker image..."
 
