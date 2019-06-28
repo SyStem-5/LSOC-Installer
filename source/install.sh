@@ -75,7 +75,7 @@ echo "
 --------------------------"
 
 #Run the PostgreSQL installation
-./postgres/install.sh
+./postgres/install.sh /etc/BlackBox
 
 #Run BlackBox setup script
 ./blackbox/install.sh
