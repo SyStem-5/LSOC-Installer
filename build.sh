@@ -19,7 +19,7 @@ rsync -a source/blackbox $build_dir
 rsync --info=progress2 ../LSOC-BlackBox/target/release/black_box $build_dir/blackbox/
 
 # Firewall
-rsync --info=progress2 source/ufw_setup/firewall_setup.sh $build_dir/ufw_setup/
+rsync --info=progress2 source/ufw/setup.sh $build_dir/ufw/
 
 # Mosquitto
 rsync -a source/mosquitto                       $build_dir --exclude *.tar
