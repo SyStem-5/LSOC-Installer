@@ -18,6 +18,14 @@ else
     mosquitto_config_dir=$2
 fi
 
+read -p $'\e[1m\e[45mBlackBox Installer\e[0m: Install BlackBox? [Y/n] ' -r REPLY
+REPLY=${REPLY:-y}
+echo    #Move to a new line
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    # handle exits from shell or function but don't exit interactive shell
+    [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
+fi
+
 echo -e "\e[1m\e[45mBlackBox Installer\e[0m: Installing BlackBox"
 
 config_dir_path=$1
