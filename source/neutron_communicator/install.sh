@@ -23,8 +23,8 @@ echo -e "\e[1m\e[45mNeutron Communicator Installer\e[0m: Creating the configurat
 mkdir $config_dir
 
 echo -e "\e[1m\e[45mNeutron Communicator Installer\e[0m: Setting permissions..."
-chown root:root $config_dir
-chmod 600 $config_dir
+chown -R root:root $config_dir
+chmod -R 600 $config_dir
 
 read -p $'\e[1m\e[45mNeutron Communicator Installer\e[0m: Default NECO settings file is going to be generated, please edit the file responsibly. To continue press [ENTER] ' -r
 $binary_name $neco_gen_settings_cmd
