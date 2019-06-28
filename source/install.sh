@@ -74,7 +74,7 @@ echo "
 --------------------------"
 
 #Run the PostgreSQL installation
-./postgres/install_postgresql.sh
+./postgres/install.sh
 
 #Run BlackBox setup script
 ./blackbox/install.sh
@@ -83,10 +83,10 @@ echo "
 systemctl start blackbox.service
 
 #Run the Mosquitto Broker installation
-./mosquitto/install_mosquitto.sh
+./mosquitto/install.sh
 
 #Run the Web Interface installation
-./web_interface/install_webinterface.sh
+./web_interface/install.sh
 
 echo -e "\e[1m\e[44mLSOC Installer\e[0m: installation completed."
 
