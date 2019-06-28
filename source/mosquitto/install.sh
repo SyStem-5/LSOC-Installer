@@ -43,7 +43,7 @@ usermod -a -G $usrmqttgroup $usrmqtt
 pass=$(openssl rand -base64 32)
 echo "$usrmqtt:$pass" | sudo chpasswd
 
-
+# Create the directory only if it doesn't exist
 if [ ! -d "$mqtt_base_loc" ]; then
     echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Creating mosquitto configuration directory..."
     mkdir $mqtt_base_loc
