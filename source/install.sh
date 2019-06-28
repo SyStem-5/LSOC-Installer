@@ -17,6 +17,7 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
 fi
 
+bb_config_dir=/etc/BlackBox
 
 echo -e "\e[1m\e[44mLSOC Installer\e[0m: Waiting for package manager to become available..."
 while true
