@@ -11,8 +11,20 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
 fi
 
-mqtt_base_loc=/etc/mosquitto
-bb_config_base_loc=/etc/BlackBox
+# If no arguments are specified, exit
+if [ -z "$1" ]; then
+    echo "No configuration base directory specified. Exiting..."
+    exit 1
+fi
+
+config_base_loc=$1
+mqtt_base_loc=$2
+
+if [ -z "$2" ]; then
+    echo -e "\e[1m\e[45mMosquitto Installer\e[0m: No mosquitto base directory specified, using default: '/etc/mosquitto'"
+    mqtt_base_loc=/etc/mosquitto
+fi
+
 mosquitto_port=8883
 
 usrmqttgroup="mqttcontainergroup"
@@ -54,7 +66,7 @@ docker build -t mosquitto mosquitto_docker/
 echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Running docker image..."
 
 #On first run; Run the Mosquitto docker image as "usrmqttcontainer" user pointing to the config file in /etc/mosquitto
-mosquitto_conf_file_loc=/etc/mosquitto/mosquitto.conf
+mosquitto_conf_file_loc=$mqtt_base_loc/mosquitto.conf
 docker run \
     --user $mosquitto_port:$mosquitto_port \
     --restart on-failure -d \
@@ -65,6 +77,6 @@ docker run \
     mosquitto
 
 #Make crontab start the script(as root) on reboot so it starts even when no one is logged in
-(crontab -l 2>/dev/null; echo "@reboot /bin/sh /etc/BlackBox/docker_run_mosquitto.sh") | crontab -
+(crontab -l 2>/dev/null; echo "@reboot /bin/sh $config_base_loc/docker_run_mosquitto.sh") | crontab -
 
 echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Installation Complete."
