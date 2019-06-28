@@ -78,7 +78,7 @@ echo "
 ./postgres/install.sh /etc/BlackBox
 
 #Run BlackBox setup script
-./blackbox/install.sh
+./blackbox/install.sh /etc/BlackBox
 
 ##Run BlackBox so we can configure the database as soon as possible
 systemctl start blackbox.service
