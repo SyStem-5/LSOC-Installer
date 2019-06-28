@@ -3,6 +3,21 @@
 # Set the workdir to the directory the script is in
 cd "$(dirname "$0")"
 
+# If no arguments are specified, exit
+if [ -z "$1" ]; then
+    echo "No configuration base directory specified. Exiting..."
+    exit 1
+fi
+
+# If the mosquitto configuration directory hasn't been specified
+# Set it to the default value
+if [ -z "$2" ]; then
+    echo -e "\e[1m\e[45mMosquitto Installer\e[0m: No mosquitto base directory specified, using default: '/etc/mosquitto'"
+    mqtt_base_loc=/etc/mosquitto
+else
+    mqtt_base_loc=$2
+fi
+
 read -p $'\e[1m\e[45mMosquitto Installer\e[0m: Install Mosquitto? [Y/n] ' -r REPLY
 REPLY=${REPLY:-y}
 echo    #Move to a new line
@@ -11,19 +26,7 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
 fi
 
-# If no arguments are specified, exit
-if [ -z "$1" ]; then
-    echo "No configuration base directory specified. Exiting..."
-    exit 1
-fi
-
 config_base_loc=$1
-mqtt_base_loc=$2
-
-if [ -z "$2" ]; then
-    echo -e "\e[1m\e[45mMosquitto Installer\e[0m: No mosquitto base directory specified, using default: '/etc/mosquitto'"
-    mqtt_base_loc=/etc/mosquitto
-fi
 
 mosquitto_port=8883
 
