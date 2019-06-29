@@ -92,4 +92,9 @@ chmod 750 $service_destination
 echo -e "\e[1m\e[45mBlackBox Installer\e[0m: Enabling service..."
 systemctl enable $service_source
 
+if [[ "$*" == *--start_service* ]]; then
+    echo -e "\e[1m\e[45mBlackBox Installer\e[0m: Starting service..."
+    systemctl start $service_source
+fi
+
 echo -e "\e[1m\e[45mBlackBox Installer\e[0m: Installation complete."

@@ -78,10 +78,8 @@ echo "
 ./postgres/install.sh /etc/BlackBox
 
 #Run BlackBox setup script
-./blackbox/install.sh /etc/BlackBox
-
-##Run BlackBox so we can configure the database as soon as possible
-systemctl start blackbox.service
+#Run the BlackBox service after install so we can configure the database as soon as possible
+./blackbox/install.sh /etc/BlackBox --start_service
 
 #Run the Mosquitto Broker installation
 ./mosquitto/install.sh /etc/BlackBox
