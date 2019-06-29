@@ -11,7 +11,7 @@ fi
 
 # If the mosquitto configuration directory hasn't been specified
 # Set it to the default value
-if [ -z "$2" ]; then
+if [ -z "$2" ] || [[ "$2" == *--* ]]; then
     echo -e "\e[1m\e[45mBlackBox Installer\e[0m: No mosquitto configuration directory specified, using default: '/etc/mosquitto'"
     mosquitto_config_dir=/etc/mosquitto
 else
