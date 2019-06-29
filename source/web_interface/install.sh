@@ -34,12 +34,10 @@ chown -R root:root $config_base_loc/$deployed_dir_name
 chmod -R 740 $config_base_loc/$deployed_dir_name
 
 echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Generating the secret key for the web-app..."
-#secret_key=$(openssl rand -base64 55)
 echo $(openssl rand -base64 55) > $config_base_loc/$deployed_dir_name/secret_key.txt
 
 echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Generating database credentials..."
 echo "postgres" > $config_base_loc/$deployed_dir_name/sql_user.txt
-#sql_pass=$(openssl rand -base64 32)
 echo $(openssl rand -base64 32) > $config_base_loc/$deployed_dir_name/sql_pass.txt
 
 echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Generating self-signed SSL certificate..."
@@ -56,7 +54,6 @@ username=${username:-admin}
 
 read -p $'\e[1m\e[45mWeb Interface Installer\e[0m: Set Web Interface Email. Press [ENTER] to skip. ' -r email
 
-
 echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Waiting 60sec for WebInterface to go online..."
 sleep 60
 
@@ -68,7 +65,7 @@ docker exec -i -t $(sudo docker ps -aqf "name=lsoc_webinterface_django") /bin/as
 
 read -p $'\e[1m\e[45mWeb Interface Installer\e[0m: \e[4mIT IS NOT RECOMMENDED TO KEEP A DIGITAL COPY OF THIS PASSWORD!\e[0m \n Web Interface superuser password: '"[$pass]."$'\nPress [ENTER] to continue. ' -r
 
-#Make crontab start the script(as root) on reboot so it starts even when no one is logged in
+# Make crontab start the script(as root) on reboot so it starts even when no one is logged in
 (crontab -l 2>/dev/null; echo "@reboot /bin/sh $config_base_loc/docker_run_webinterface.sh") | crontab -
 
 echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Installation Complete."
