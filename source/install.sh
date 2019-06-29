@@ -17,7 +17,7 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
 fi
 
-bb_config_dir=/etc/BlackBox
+bb_main_dir=/etc/BlackBox
 
 echo -e "\e[1m\e[44mLSOC Installer\e[0m: Waiting for package manager to become available..."
 while true
@@ -47,7 +47,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     crontab -r
 fi
 
-#rm -rf /etc/BlackBox
+#rm -rf $bb_main_dir
 
 #Run NECO setup script
 ./neutron_communicator/install.sh
@@ -75,17 +75,17 @@ echo "
 --------------------------"
 
 #Run the PostgreSQL installation
-./postgres/install.sh /etc/BlackBox
+./postgres/install.sh $bb_main_dir
 
 #Run BlackBox setup script
 #Run the BlackBox service after install so we can configure the database as soon as possible
-./blackbox/install.sh /etc/BlackBox --start_service
+./blackbox/install.sh $bb_main_dir --start_service
 
 #Run the Mosquitto Broker installation
-./mosquitto/install.sh /etc/BlackBox
+./mosquitto/install.sh $bb_main_dir
 
 #Run the Web Interface installation
-./web_interface/install.sh
+./web_interface/install.sh $bb_main_dir
 
 echo -e "\e[1m\e[44mLSOC Installer\e[0m: installation completed."
 
