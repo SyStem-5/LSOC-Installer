@@ -47,3 +47,4 @@ rsync -a --info=progress2 ../LSOC-WebInterface/ $build_dir/web_interface/webinte
     --exclude run_dev_server.sh \
     --exclude set_dev_env_vars.sh \
     --exclude .gitignore
+mv $build_dir/web_interface/webinterface_docker/django/app/webinterface.version $build_dir/web_interface/webinterface_docker
