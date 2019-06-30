@@ -1,12 +1,5 @@
 #!/bin/bash
 
-version_file=/etc/BlackBox/webinterface.version
-
-echo '0.1.0' > $version_file
-
-# Remove \n from the end
-truncate -s -1 $version_file
-
 wi_base_loc=/etc/BlackBox/webinterface_docker/
 cd $wi_base_loc
 
