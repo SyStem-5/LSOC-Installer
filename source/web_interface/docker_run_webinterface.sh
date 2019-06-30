@@ -3,10 +3,7 @@
 wi_base_loc=/etc/BlackBox/webinterface_docker/
 cd $wi_base_loc
 
-#Wait a bit, if a mosquitto container is on this system we're going to try to connect it to our network
-sleep 5
-
-sudo docker network connect webinterfacedocker_mosquitto_network mqtt
+sudo docker network connect webinterfacedocker_mosquitto_network mosquitto
 
 #System config for Redis
 sudo sysctl vm.overcommit_memory=1
