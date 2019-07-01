@@ -34,11 +34,11 @@ echo -e "\e[1m\e[45mPostgreSQL Installer\e[0m: Generating and saving postgres cr
 creds=$(openssl rand -base64 32)
 echo $creds > $creds_file_loc
 
-echo -e "\e[1m\e[45mPostgreSQL Installer\e[0m: Copying docker run script to the base configuration directory..."
+echo -e "\e[1m\e[45mPostgreSQL Installer\e[0m: Copying docker run script to the base configuration directory and setting permissions..."
 echo \
 '#!/bin/bash
 sudo docker container start database_postgres' \
-> $config_base_location/docker_run_postgresql.sh
+> $config_base_location/docker_run_postgresql.sh && chmod 770 $config_base_location/docker_run_postgresql.sh
 
 echo -e "\e[1m\e[45mPostgreSQL Installer\e[0m: Creating the docker database network..."
 docker network create database

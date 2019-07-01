@@ -54,8 +54,9 @@ echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Setting permissions..."
 chown -R root:$usrmqttgroup $mqtt_base_loc
 chmod -R 740 $mqtt_base_loc
 
-echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Copying docker run command file..."
+echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Copying docker run command file and setting permissions..."
 cp mosquitto_docker/docker_run.sh $config_base_loc/docker_run_mosquitto.sh
+chmod 770 $config_base_loc/docker_run_mosquitto.sh
 
 echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Copying mosquitto version file..."
 cp mosquitto_docker/version $config_base_loc/mosquitto.version
