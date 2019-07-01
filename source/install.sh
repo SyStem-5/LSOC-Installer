@@ -85,7 +85,7 @@ echo "
 ./mosquitto/install.sh $bb_main_dir
 
 #Run the Web Interface installation
-./web_interface/install.sh $bb_main_dir
+./web_interface/install.sh $bb_main_dir --self_signed
 
 echo -e "\e[1m\e[44mLSOC Installer\e[0m: installation completed."
 

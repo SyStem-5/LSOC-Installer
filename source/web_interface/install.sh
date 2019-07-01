@@ -51,11 +51,13 @@ echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Generating database credential
 echo "postgres" > $config_base_loc/$deployed_dir_name/sql_user.txt
 echo $(openssl rand -base64 32) > $config_base_loc/$deployed_dir_name/sql_pass.txt
 
-echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Generating self-signed SSL certificate..."
-openssl req \
-       -newkey rsa:2048 -nodes -keyout $config_base_loc/$deployed_dir_name/site.key \
-       -x509 -days 750 -out $config_base_loc/$deployed_dir_name/site.crt \
-       -subj "/C=HR/ST=Croatia"
+if [[ "$*" == *--self_signed* ]]; then
+    echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Generating self-signed SSL certificate..."
+    openssl req \
+        -newkey rsa:2048 -nodes -keyout $config_base_loc/$deployed_dir_name/site.key \
+        -x509 -days 750 -out $config_base_loc/$deployed_dir_name/site.crt \
+        -subj "/C=HR/ST=Croatia"
+fi
 
 echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Building and running Docker image."
 docker-compose -f $config_base_loc/$deployed_dir_name/docker-compose.yml up -d --build
