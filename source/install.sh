@@ -56,8 +56,6 @@ fi
 ./ufw/setup.sh
 
 #Install docker
-echo "--------------------------
-"
 if hash docker 2>/dev/null; then
     echo -e "\e[1m\e[44mLSOC Installer\e[0m: Found Docker installed."
     read -p $'\e[1m\e[44mLSOC Installer\e[0m: Check for a new docker version? [Y/n] ' -r
@@ -70,9 +68,6 @@ else
     echo -e "\e[1m\e[44mLSOC Installer\e[0m: Downloading & Installing the latest Docker version."
     apt -y install docker.io
 fi
-
-echo "
---------------------------"
 
 #Run the PostgreSQL installation
 ./postgres/install.sh $bb_main_dir
