@@ -23,8 +23,19 @@ deployed_dir_name=webinterface_docker
 echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Installing docker-compose..."
 apt install -y docker-compose
 
-echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Copying docker run command file..."
-cp docker_run_webinterface.sh $config_base_loc
+echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Copying docker run command file and setting permissions..."
+echo \
+"#!/bin/bash
+
+# Try to connect mosquitto container to our network
+sudo docker network connect ${deployed_dir_name//_}_mosquitto_network mosquitto
+
+# System config for Redis
+sudo sysctl vm.overcommit_memory=1
+sudo echo never > /sys/kernel/mm/transparent_hugepage/enabled
+
+docker-compose -f $config_base_loc/$deployed_dir_name/docker-compose.yml up -d --build" \
+> $config_base_loc/docker_run_webinterface.sh && chmod 770 $config_base_loc/docker_run_webinterface.sh
 
 echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Deploying the webapp to the base directory..."
 cp -r $deployed_dir_name $config_base_loc
