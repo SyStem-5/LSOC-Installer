@@ -24,7 +24,7 @@ while true
 do
     sudo dpkg --configure -a
     if [ $? -eq 0 ]; then
-        echo -e "\e[1m\e[44mLSOC Installer\e[0m: Package manager \e[32mOK\e[0m"
+        echo -e "\e[1m\e[44mNeutron Server Installer\e[0m: Package manager \e[32m[OK]\e[0m"
         break
     fi
     sleep 1
