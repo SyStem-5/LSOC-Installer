@@ -37,8 +37,23 @@ rsync -a --info=progress2 ../Mosquitto-Auth-Plugin/ $build_dir/mosquitto/mosquit
 # Postgress
 rsync -a source/postgres                        $build_dir --exclude *.tar
 
-# Web Interface
-rsync -a --info=progress2 source/web_interface  $build_dir
+## Web Interface ##
+
+# Copy the install script from LSOC-Installer
+rsync -a --info=progress2 source/web_interface  $build_dir \
+    --exclude nginx.conf \
+    --exclude docker-compose.yml
+
+# Web Application - Copy the WebApp docker images
+rsync -a --info=progress2 ../WebApp-Docker/ $build_dir/web_interface/webinterface_docker \
+    --exclude .git \
+    --exclude README.md
+
+# Web Application - Copy our docker-compose file and nginx configuration
+rsync --info=progress2 source/web_interface/nginx.conf $build_dir/web_interface/webinterface_docker/nginx/
+rsync --info=progress2 source/web_interface/docker-compose.yml $build_dir/web_interface/webinterface_docker/
+
+# Copy the actual django web application
 rsync -a --info=progress2 ../LSOC-WebInterface/ $build_dir/web_interface/webinterface_docker/django/app \
     --exclude .vscode \
     --exclude .git \
@@ -47,4 +62,6 @@ rsync -a --info=progress2 ../LSOC-WebInterface/ $build_dir/web_interface/webinte
     --exclude run_dev_server.sh \
     --exclude set_dev_env_vars.sh \
     --exclude .gitignore
+
+# Copy the version file to the base dir two levels lower
 mv $build_dir/web_interface/webinterface_docker/django/app/webinterface.version $build_dir/web_interface/webinterface_docker
