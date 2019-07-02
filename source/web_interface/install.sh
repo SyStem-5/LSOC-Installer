@@ -73,7 +73,7 @@ sleep 60
 # Generate the password for the superuser web interface account
 pass=$(openssl rand -base64 32)
 
-docker exec -i -t $(sudo docker ps -aqf "name=lsoc_webinterface_django") /bin/ash -c \
+docker exec -i -t $(sudo docker ps -aqf "name=webinterface_django") /bin/ash -c \
 "echo \"from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('$username', '$email', '$pass')\" | python manage.py shell"
 
 read -p $'\e[1m\e[45mWeb Interface Installer\e[0m: \e[4mIT IS NOT RECOMMENDED TO KEEP A DIGITAL COPY OF THIS PASSWORD!\e[0m \n Web Interface superuser password: '"[$pass]."$'\nPress [ENTER] to continue. ' -r
