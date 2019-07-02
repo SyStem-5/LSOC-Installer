@@ -5,7 +5,7 @@ services:
     build: ./django
     restart: on-failure
     command: daphne project01.asgi:application --bind 0.0.0.0
-    container_name: lsoc_webinterface_django
+    container_name: webinterface_django
     volumes:
       - static_volume:/usr/src/djangoapp/staticfiles
       - media_volume:/usr/src/djangoapp/mediafiles
@@ -33,7 +33,7 @@ services:
   nginx:
     build: ./nginx
     restart: on-failure
-    container_name: lsoc_webinterface_nginx
+    container_name: webinterface_nginx
     volumes:
       - static_volume:/usr/src/djangoapp/staticfiles
       - media_volume:/usr/src/djangoapp/mediafiles
@@ -51,14 +51,14 @@ services:
   redis:
     image: redis:5.0-alpine
     restart: on-failure
-    container_name: lsoc_webinterface_redis
+    container_name: webinterface_redis
     networks:
       - redis_network
 
   postgres:
     image: postgres:11-alpine
     restart: on-failure
-    container_name: lsoc_webinterface_postgres
+    container_name: webinterface_postgres
     volumes:
       - postgres_volume:/var/lib/postgresql/data
     secrets:
