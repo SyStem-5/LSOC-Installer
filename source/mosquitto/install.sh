@@ -69,7 +69,13 @@ echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Running docker image..."
 
 #On first run; Run the Mosquitto docker image as "usrmqttcontainer" user pointing to the config file in /etc/mosquitto
 mosquitto_conf_file_loc=$mqtt_base_loc/mosquitto.conf
-network_name=database
+
+if [[ "$*" == *--neus* ]]; then
+    network_name=webinterfacedocker_mosquitto_network
+else
+    network_name=database
+fi
+
 docker run \
     --user $mosquitto_port:$mosquitto_port \
     --restart on-failure -d \
