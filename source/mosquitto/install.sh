@@ -11,7 +11,7 @@ fi
 
 # If the mosquitto configuration directory hasn't been specified
 # Set it to the default value
-if [ -z "$2" ]; then
+if [ -z "$2" ] || [[ "$2" == *--* ]]; then
     echo -e "\e[1m\e[45mMosquitto Installer\e[0m: No mosquitto base directory specified, using default: '/etc/mosquitto'"
     mqtt_base_loc=/etc/mosquitto
 else
