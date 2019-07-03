@@ -76,14 +76,33 @@ else
     network_name=database
 fi
 
-docker run \
-    --user $mosquitto_port:$mosquitto_port \
-    --restart on-failure -d \
-    -p 0.0.0.0:$mosquitto_port:$mosquitto_port \
-    -v $mosquitto_conf_file_loc:/mosquitto/config/mosquitto.conf \
-    --name mosquitto \
-    --net=$network_name \
-    mosquitto
+# Create an array for arguments
+declare -a docker_run_args
+
+docker_run_args+=(--user $mosquitto_port:$mosquitto_port)
+docker_run_args+=(--restart on-failure -d)
+docker_run_args+=(-p 0.0.0.0:$mosquitto_port:$mosquitto_port)
+
+# If the configuration file doesn't exist, we dont suppy a volume argument pointing to something that doesn't exist
+if [ -f "$mosquitto_conf_file_loc" ]; then
+    docker_run_args+=(-v $mosquitto_conf_file_loc:/mosquitto/config/mosquitto.conf)
+else
+    echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Could not find external configuration. Using default..."
+fi
+
+docker_run_args+=(--name mosquitto)
+
+# If the network name exists, add it, else, notify the user that that network doesn't exist
+if [ ! -z $(sudo docker network ls -qf "name=$network_name") ]; then
+    docker_run_args+=(--net=$network_name)
+else
+    echo -e "\e[1m\e[45mMosquitto Installer\e[0m: [\e[91mError\e[0m] Could not find network '$network_name'. Skipping --net argument..."
+fi
+
+docker_run_args+=(mosquitto)
+
+# Execute the command with the arguments from the array
+docker run "${docker_run_args[@]}"
 
 #Make crontab start the script(as root) on reboot so it starts even when no one is logged in
 (crontab -l 2>/dev/null; echo "@reboot /bin/sh $config_base_loc/docker_run_mosquitto.sh") | crontab -
