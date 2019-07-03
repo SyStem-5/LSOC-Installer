@@ -69,13 +69,14 @@ echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Running docker image..."
 
 #On first run; Run the Mosquitto docker image as "usrmqttcontainer" user pointing to the config file in /etc/mosquitto
 mosquitto_conf_file_loc=$mqtt_base_loc/mosquitto.conf
+network_name=database
 docker run \
     --user $mosquitto_port:$mosquitto_port \
     --restart on-failure -d \
     -p 0.0.0.0:$mosquitto_port:$mosquitto_port \
     -v $mosquitto_conf_file_loc:/mosquitto/config/mosquitto.conf \
     --name mosquitto \
-    --net=database \
+    --net=$network_name \
     mosquitto
 
 #Make crontab start the script(as root) on reboot so it starts even when no one is logged in
