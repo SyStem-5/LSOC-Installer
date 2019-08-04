@@ -49,17 +49,36 @@ if [ ! -d "$mqtt_base_loc" ]; then
     mkdir $mqtt_base_loc
 fi
 
-echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Setting permissions..."
-#Make the directory and everything in it root:rwx usrmqttcontainer:r
-chown -R root:$usrmqttgroup $mqtt_base_loc
-chmod -R 740 $mqtt_base_loc
-
 echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Copying docker run command file and setting permissions..."
 cp mosquitto_docker/docker_run.sh $config_base_loc/docker_run_mosquitto.sh
 chmod 770 $config_base_loc/docker_run_mosquitto.sh
 
 echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Copying mosquitto version file..."
 cp mosquitto_docker/version $config_base_loc/mosquitto.version
+
+neutron_communicator add_certificate \
+    --name Mosquitto \
+    --not_encrypted \
+    --certificate_duration 365 \
+    --key_length 2048 \
+    --subj /C=HR/ST=Croatia \
+    --key_file $mqtt_base_loc/server.key \
+    --cert_file $mqtt_base_loc/server.crt \
+    ca-signed \
+    --ca_certificate_duration 730 \
+    --ca_extensions v3_ca \
+    --ca_subj /C=HR/ST=Croatia/L=Zagreb/CN=127.0.0.1 \
+    --ca_key_file $mqtt_base_loc/ca.key \
+    --ca_cert_file $mqtt_base_loc/ca.crt
+
+echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Setting permissions..."
+#Make the directory and everything in it root:rwx usrmqttcontainer:r
+chown -R root:$usrmqttgroup $mqtt_base_loc
+
+# Allow the container to read these
+chmod 640 $mqtt_base_loc/ca.crt
+chmod 640 $mqtt_base_loc/server.crt
+chmod 640 $mqtt_base_loc/server.key
 
 echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Installing docker image..."
 
@@ -82,6 +101,11 @@ declare -a docker_run_args
 docker_run_args+=(--user $mosquitto_port:$mosquitto_port)
 docker_run_args+=(--restart on-failure -d)
 docker_run_args+=(-p 0.0.0.0:$mosquitto_port:$mosquitto_port)
+
+# Bind the certificates to the container
+docker_run_args+=(-v $mqtt_base_loc/ca.crt:/mosquitto/config/ca.crt)
+docker_run_args+=(-v $mqtt_base_loc/server.crt:/mosquitto/config/server.crt)
+docker_run_args+=(-v $mqtt_base_loc/server.key:/mosquitto/config/server.key)
 
 # If the configuration file doesn't exist, we dont suppy a volume argument pointing to something that doesn't exist
 if [ -f "$mosquitto_conf_file_loc" ]; then
