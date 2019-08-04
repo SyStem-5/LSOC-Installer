@@ -107,7 +107,7 @@ docker_run_args+=(-v $mqtt_base_loc/ca.crt:/mosquitto/config/ca.crt)
 docker_run_args+=(-v $mqtt_base_loc/server.crt:/mosquitto/config/server.crt)
 docker_run_args+=(-v $mqtt_base_loc/server.key:/mosquitto/config/server.key)
 
-# If the configuration file doesn't exist, we dont suppy a volume argument pointing to something that doesn't exist
+# If the configuration file doesn't exist, we dont supply a volume argument pointing to something that doesn't exist
 if [ -f "$mosquitto_conf_file_loc" ]; then
     docker_run_args+=(-v $mosquitto_conf_file_loc:/mosquitto/config/mosquitto.conf)
 else
