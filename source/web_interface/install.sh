@@ -52,11 +52,14 @@ echo "postgres" > $config_base_loc/$deployed_dir_name/sql_user.txt
 echo $(openssl rand -base64 32) > $config_base_loc/$deployed_dir_name/sql_pass.txt
 
 if [[ "$*" == *--self_signed* ]]; then
-    echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Generating self-signed SSL certificate..."
-    openssl req \
-        -newkey rsa:2048 -nodes -keyout $config_base_loc/$deployed_dir_name/site.key \
-        -x509 -days 750 -out $config_base_loc/$deployed_dir_name/site.crt \
-        -subj "/C=HR/ST=Croatia"
+    neutron_communicator add_certificate \
+        --name WebInterface \
+        --algorithm rsa:2048 \
+        --not_encrypted \
+        --certificate_duration 365 \
+        --subj /C=HR/ST=Croatia \
+        --cert_file $config_base_loc/$deployed_dir_name/site.crt \
+        --key_file $config_base_loc/$deployed_dir_name/site.key
 fi
 
 echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Building and running Docker image."
