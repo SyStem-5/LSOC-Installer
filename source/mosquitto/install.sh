@@ -89,6 +89,7 @@ echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Running docker image..."
 #On first run; Run the Mosquitto docker image as "usrmqttcontainer" user pointing to the config file in /etc/mosquitto
 mosquitto_conf_file_loc=$mqtt_base_loc/mosquitto.conf
 
+# If we're running Mosquitto for the Neutron Update Server - connect to the database inside the webinterface container
 if [[ "$*" == *--neus* ]]; then
     network_name=webinterfacedocker_mosquitto_network
 else
