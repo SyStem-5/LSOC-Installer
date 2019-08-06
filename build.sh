@@ -28,11 +28,6 @@ rsync -a --info=progress2 ../Mosquitto-Auth-DockerImage/ $build_dir/mosquitto/mo
     --exclude .git \
     --exclude .gitignore \
     --exclude .gitmodules
-rsync -a --info=progress2 ../Mosquitto-Auth-Plugin/ $build_dir/mosquitto/mosquitto_docker/Mosquitto-Auth-Plugin \
-    --exclude .vscode \
-    --exclude .git \
-    --exclude .gitignore \
-    --exclude .gitmodules
 
 # Postgress
 rsync -a source/postgres                        $build_dir --exclude *.tar
