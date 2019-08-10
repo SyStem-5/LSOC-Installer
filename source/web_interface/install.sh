@@ -19,7 +19,12 @@ mkdir $config_base_loc
 echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Installing docker-compose..."
 apt install -y docker-compose
 
-echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Copying docker run command file and setting permissions..."
+echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Creating web_interface user..."
+
+groupadd web_interface_group
+useradd --system -s /bin/bash --groups web_interface_group,docker web_interface
+
+echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Copying docker run script..."
 echo \
 "#!/bin/bash
 
@@ -30,15 +35,11 @@ sudo docker network connect ${deployed_dir_name//_}_mosquitto_network mosquitto
 sudo sysctl vm.overcommit_memory=1
 sudo echo never > /sys/kernel/mm/transparent_hugepage/enabled
 
-docker-compose -f $config_base_loc/$deployed_dir_name/docker-compose.yml up -d --build" \
+sudo -u web_interface docker-compose -f $config_base_loc/$deployed_dir_name/docker-compose.yml up -d --build" \
 > $config_base_loc/docker_run_webinterface.sh && chmod 770 $config_base_loc/docker_run_webinterface.sh
 
 echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Deploying the webapp to the base directory..."
 cp -r $deployed_dir_name $config_base_loc
-
-echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Setting permissions..."
-chown -R root:root $config_base_loc/$deployed_dir_name
-chmod -R 740 $config_base_loc/$deployed_dir_name
 
 echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Generating the secret key for the web-app..."
 echo $(openssl rand -base64 55) > $config_base_loc/$deployed_dir_name/secret_key.txt
@@ -55,11 +56,33 @@ if [[ "$*" == *--self_signed* ]]; then
         --certificate_duration 365 \
         --subj /C=HR/ST=Croatia \
         --cert_file $config_base_loc/$deployed_dir_name/site.crt \
-        --key_file $config_base_loc/$deployed_dir_name/site.key
+        --key_file $config_base_loc/$deployed_dir_name/site.key \
+        --service_ips 'IP:127.0.0.1'
 fi
 
+if [ -d "/etc/mosquitto" ]; then
+    echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Found Mosquitto installed, adding WebInterface as an auxiliary path for the CA certificate..."
+
+    # Run neutron_communicator to add an aux path for the ca certificate
+    neutron_communicator add_cert_aux_paths \
+        --name Mosquitto \
+        --type ca \
+        --paths /dev/null $config_base_loc/$deployed_dir_name/mqtt_ca.crt
+else
+    echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: For the WIs moquitto connection to work, the MQTT CA certificate is going to have to be manually copied into the WIs root install folder."
+fi
+
+# If we don't create a file right now, docker-compose will create a folder and will refuse to use a file if we try to change it
+touch $config_base_loc/$deployed_dir_name/mqtt_ca.crt
+
+echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Setting permissions..."
+chown -R web_interface:web_interface_group $config_base_loc
+chmod -R 740 $config_base_loc
+
+chmod 444 $config_base_loc/$deployed_dir_name/sql_user.txt $config_base_loc/$deployed_dir_name/sql_pass.txt
+
 echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Building and running Docker image."
-docker-compose -f $config_base_loc/$deployed_dir_name/docker-compose.yml up -d --build
+sudo -u web_interface docker-compose -f $config_base_loc/$deployed_dir_name/docker-compose.yml up -d --build
 
 read -p $'\e[1m\e[45mWeb Interface Installer\e[0m: Set Web Interface Username. Press [ENTER] for [admin] ' -r username
 username=${username:-admin}
