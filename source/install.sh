@@ -51,6 +51,7 @@ fi
 
 #Run NECO setup script
 ./neutron_communicator/install.sh
+neco_service_file_name=neutroncommunicator.service
 
 #Run ufw setup script
 ./ufw/setup.sh
@@ -81,6 +82,9 @@ fi
 
 #Run the Web Interface installation
 ./web_interface/install.sh $bb_main_dir --self_signed
+
+echo -e "\e[1m\e[45mLSOC Installer\e[0m: Enabling Neutron Communicator service..."
+systemctl start $neco_service_file_name
 
 echo -e "\e[1m\e[44mLSOC Installer\e[0m: installation completed."
 
