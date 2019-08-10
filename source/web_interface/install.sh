@@ -3,12 +3,6 @@
 # Set the workdir to the directory the script is in
 cd "$(dirname "$0")"
 
-# If no arguments are specified, exit
-if [ -z "$1" ]; then
-    echo "No configuration base directory specified. Exiting..."
-    exit 1
-fi
-
 read -p $'\e[1m\e[45mWeb Interface Installer\e[0m: Install the Web Interface? [Y/n] ' -r REPLY
 REPLY=${REPLY:-y}
 echo    #Move to a new line
@@ -17,8 +11,10 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
 fi
 
-config_base_loc=$1
+config_base_loc=/etc/LSOCWebInterface
 deployed_dir_name=webinterface_docker
+
+mkdir $config_base_loc
 
 echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Installing docker-compose..."
 apt install -y docker-compose
