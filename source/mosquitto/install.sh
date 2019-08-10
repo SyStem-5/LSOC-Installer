@@ -56,6 +56,9 @@ chmod 770 $config_base_loc/docker_run_mosquitto.sh
 echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Copying mosquitto version file..."
 cp mosquitto_docker/version $config_base_loc/mosquitto.version
 
+read -p $'\e[1m\e[45mMosquitto Installer\e[0m: CA -> Set allowed IPs/Domains of this machine (separate by a comma). Press [RETURN] for [IP:127.0.0.1,DNS:mosquitto] ' -r allowed_ips
+allowed_ips=${allowed_ips:-'IP:127.0.0.1,DNS:mosquitto'}
+
 neutron_communicator add_certificate \
     --name Mosquitto \
     --not_encrypted \
@@ -64,6 +67,7 @@ neutron_communicator add_certificate \
     --subj /C=HR/ST=Croatia \
     --key_file $mqtt_base_loc/server.key \
     --cert_file $mqtt_base_loc/server.crt \
+    --service_ips $allowed_ips \
     ca-signed \
     --ca_certificate_duration 730 \
     --ca_extensions v3_ca \
