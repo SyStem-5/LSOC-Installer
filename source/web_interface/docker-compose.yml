@@ -13,6 +13,7 @@ services:
       - secret_key
       - sql_user
       - sql_pass
+      - mqtt_ca.crt
     environment:
       - SECRETS_LOCATION=/run/secrets/
       - SQL_ENGINE=django.db.backends.postgresql
@@ -94,3 +95,5 @@ secrets:
     file: site.crt
   site_key:
     file: site.key
+  mqtt_ca.crt:
+    file: mqtt_ca.crt
