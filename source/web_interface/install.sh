@@ -70,7 +70,7 @@ username=${username:-admin}
 
 read -p $'\e[1m\e[45mWeb Interface Installer\e[0m: Set Web Interface Email. Press [ENTER] to skip. ' -r email
 
-echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Waiting 60sec for WebInterface to go online..."
+echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Waiting 60sec for WebInterface to be ready..."
 sleep 60
 
 # Generate the password for the superuser web interface account
@@ -80,6 +80,8 @@ docker exec -i -t $(sudo docker ps -aqf "name=webinterface_django") /bin/ash -c 
 "echo \"from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('$username', '$email', '$pass')\" | python manage.py shell"
 
 read -p $'\e[1m\e[45mWeb Interface Installer\e[0m: \e[4mIT IS NOT RECOMMENDED TO KEEP A DIGITAL COPY OF THIS PASSWORD!\e[0m \n Web Interface superuser password: '"[$pass]."$'\nPress [ENTER] to continue. ' -r
+
+echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: A restart may be needed for the docker run script to be ran (MQTT network to WI)."
 
 # Make crontab start the script(as root) on reboot so it starts even when no one is logged in
 (crontab -l 2>/dev/null; echo "@reboot /bin/sh $config_base_loc/docker_run_webinterface.sh") | crontab -
