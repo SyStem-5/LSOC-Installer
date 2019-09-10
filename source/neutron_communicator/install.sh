@@ -39,4 +39,25 @@ chmod 750 $service_file_destination/$service_file_name
 echo -e "\e[1m\e[45mNeutron Communicator Installer\e[0m: Enabling service..."
 systemctl enable $service_file_name
 
+# Here we prepare for configuring the Neutron credentials
+until [ ! -z "$user" ]
+do
+    read -p $'\e[1m\e[45mNeutron Communicator Installer\e[0m: Specify the account username under which this NECO is registered: ' user
+done
+
+until [ ! -z "$mqtt_username" ]
+do
+    read -p $'\e[1m\e[45mNeutron Communicator Installer\e[0m: Specify the MQTT username of the registered updater: ' mqtt_username
+done
+
+until [ ! -z "$mqtt_password" ]
+do
+    read -p $'\e[1m\e[45mNeutron Communicator Installer\e[0m: Specify the MQTT password of the registered updater: ' mqtt_password
+done
+
+neutron_communicator neutron_credentials \
+    -a "$user" \
+    -u "$mqtt_username" \
+    -p "$mqtt_password"
+
 echo -e "\e[1m\e[45mNeutron Communicator Installer\e[0m: NECO installation complete."
