@@ -23,7 +23,7 @@ ufw allow http
 #MQTT Secure
 ufw allow 8883/tcp
 #SSH
-ufw allow ssh
+ufw allow 39901/tcp
 
 echo -e "\e[1m\e[45mUFW Setup\e[0m: Enabling firewall..."
 ufw enable

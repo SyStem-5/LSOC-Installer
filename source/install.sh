@@ -53,6 +53,9 @@ fi
 ./neutron_communicator/install.sh
 neco_service_file_name=neutroncommunicator.service
 
+#Run SSH setup script
+./ssh/install.sh
+
 #Run ufw setup script
 ./ufw/setup.sh
 

@@ -18,6 +18,9 @@ rsync --info=progress2 ../LSOC-NeutronCommunicator/target/release/neutron_commun
 rsync -a source/blackbox $build_dir
 rsync --info=progress2 ../LSOC-BlackBox/target/release/black_box $build_dir/blackbox/
 
+# SSH
+rsync --info=progress2 source/ssh/install.sh $build_dir/ssh/
+
 # Firewall
 rsync --info=progress2 source/ufw/setup.sh $build_dir/ufw/
 
