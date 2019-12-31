@@ -29,7 +29,7 @@ echo \
 "#!/bin/bash
 
 # Try to connect mosquitto container to our network
-sudo docker network connect ${deployed_dir_name//_}_mosquitto_network mosquitto
+sudo docker network connect ${deployed_dir_name}_mosquitto_network mosquitto
 
 # System config for Redis
 sudo sysctl vm.overcommit_memory=1
@@ -89,14 +89,11 @@ username=${username:-admin}
 
 read -p $'\e[1m\e[45mWeb Interface Installer\e[0m: Set Web Interface Email. Press [ENTER] to skip. ' -r email
 
-echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Waiting 60sec for WebInterface to be ready..."
-sleep 60
-
 # Generate the password for the superuser web interface account
 pass=$(openssl rand -base64 10)
 
 docker exec -i -t $(sudo docker ps -aqf "name=webinterface_django") /bin/ash -c \
-"echo \"from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('$username', '$email', '$pass')\" | python manage.py shell"
+"echo -e \"from django.contrib.auth import get_user_model; from django.db import connections; from django.db.utils import OperationalError; from time import sleep; db_conn = connections['default'];\nwhile True:\n try:\n  c = db_conn.cursor(); sleep(5); break\n except OperationalError:\n  sleep(5);print('.', end='')\nUser = get_user_model(); User.objects.create_superuser('$username', '$email', '$pass')\" | python manage.py shell"
 
 read -p $'\e[1m\e[45mWeb Interface Installer\e[0m: \e[4mIT IS NOT RECOMMENDED TO KEEP A DIGITAL COPY OF THIS PASSWORD!\e[0m \n Web Interface superuser password: '"[$pass]."$'\nPress [ENTER] to continue. ' -r
 
@@ -104,5 +101,16 @@ echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: A restart may be needed for th
 
 # Make crontab start the script(as root) on reboot so it starts even when no one is logged in
 (crontab -l 2>/dev/null; echo "@reboot /bin/sh $config_base_loc/docker_run_webinterface.sh") | crontab -
+
+echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Adding WebInterface to NECOs update component list."
+# Add the Mosquitto component to NECO
+neutron_communicator update_component add \
+    --name "WebInterface" \
+    --owner "web_interface" \
+    --owner_group "web_interface_group" \
+    --permissions "740" \
+    --version_file_path "$config_base_loc/$deployed_dir_name/webinterface.version" \
+    --container_name "webinterface_django" \
+    --restart_command "sudo docker restart webinterface_django"
 
 echo -e "\e[1m\e[45mWeb Interface Installer\e[0m: Installation Complete."

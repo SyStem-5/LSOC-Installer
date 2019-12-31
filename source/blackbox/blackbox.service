@@ -4,7 +4,7 @@ Description=LSOC System controller
 [Service]
 Type=simple
 Restart=always
-ExecStart=/bin/black_box -d
+ExecStart=/bin/black_box
 #This is to stop BlackBox from thinking it is not root when being run as a service
 Environment="USER=root"
 #"RUST_BACKTRACE=1"

@@ -26,9 +26,10 @@ echo -e "\e[1m\e[45mNeutron Communicator Installer\e[0m: Setting permissions..."
 chown -R root:root $config_dir
 chmod -R 600 $config_dir
 
-read -p $'\e[1m\e[45mNeutron Communicator Installer\e[0m: Default NECO settings file is going to be generated, please edit the file responsibly. To continue press [ENTER] ' -r
+# read -p $'\e[1m\e[45mNeutron Communicator Installer\e[0m: Default NECO settings file is going to be generated, please edit the file responsibly. To continue press [ENTER] ' -r
+echo -e "\e[1m\e[45mNeutron Communicator Installer\e[0m: Generating default NECO settings..."
 $binary_name $neco_gen_settings_cmd
-nano $config_dir/settings.json
+# nano $config_dir/settings.json
 
 echo -e "\e[1m\e[45mNeutron Communicator Installer\e[0m: Copying the service file..."
 cp $service_file_name $service_file_destination
@@ -45,19 +46,19 @@ do
     read -p $'\e[1m\e[45mNeutron Communicator Installer\e[0m: Specify the account username under which this NECO is registered: ' user
 done
 
-until [ ! -z "$mqtt_username" ]
+until [ ! -z "$neus_username" ]
 do
-    read -p $'\e[1m\e[45mNeutron Communicator Installer\e[0m: Specify the MQTT username of the registered updater: ' mqtt_username
+    read -p $'\e[1m\e[45mNeutron Communicator Installer\e[0m: Specify the username of the registered updater: ' neus_username
 done
 
-until [ ! -z "$mqtt_password" ]
+until [ ! -z "$neus_password" ]
 do
-    read -p $'\e[1m\e[45mNeutron Communicator Installer\e[0m: Specify the MQTT password of the registered updater: ' mqtt_password
+    read -p $'\e[1m\e[45mNeutron Communicator Installer\e[0m: Specify the password of the registered updater: ' neus_password
 done
 
 neutron_communicator neutron_credentials \
     -a "$user" \
-    -u "$mqtt_username" \
-    -p "$mqtt_password"
+    -u "$neus_username" \
+    -p "$neus_password"
 
 echo -e "\e[1m\e[45mNeutron Communicator Installer\e[0m: NECO installation complete."

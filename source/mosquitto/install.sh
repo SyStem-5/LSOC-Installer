@@ -136,4 +136,14 @@ docker run "${docker_run_args[@]}"
 #Make crontab start the script(as root) on reboot so it starts even when no one is logged in
 (crontab -l 2>/dev/null; echo "@reboot /bin/sh $config_base_loc/docker_run_mosquitto.sh") | crontab -
 
+# Add the Mosquitto component to NECO
+neutron_communicator update_component add \
+    --name "Mosquitto" \
+    --owner "root" \
+    --owner_group "$usrmqttgroup" \
+    --permissions "740" \
+    --version_file_path "$config_base_loc/mosquitto.version" \
+    --container_name "mosquitto" \
+    --restart_command "sudo docker restart mosquitto"
+
 echo -e "\e[1m\e[45mMosquitto Installer\e[0m: Installation Complete."

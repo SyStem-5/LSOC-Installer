@@ -10,6 +10,9 @@ fi
 
 echo -e "\e[1m\e[45mUFW Setup\e[0m: Setting up firewall..."
 
+echo -e "\e[1m\e[45mUFW Setup\e[0m: Installing UFW..."
+apt -y install ufw
+
 echo -e "\e[1m\e[45mUFW Setup\e[0m: Denying all incoming network traffic."
 ufw default deny incoming
 

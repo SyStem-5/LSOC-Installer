@@ -59,6 +59,9 @@ neco_service_file_name=neutroncommunicator.service
 #Run ufw setup script
 ./ufw/setup.sh
 
+echo -e "\e[1m\e[44mLSOC Installer\e[0m: Installing unzip..."
+apt -y install unzip
+
 #Install docker
 if hash docker 2>/dev/null; then
     echo -e "\e[1m\e[44mLSOC Installer\e[0m: Found Docker installed."

@@ -19,7 +19,7 @@ fi
 
 config_base_location=$1
 creds_file_loc=$config_base_location/postgresql_bb.creds
-pg_major_version=11
+pg_major_version=12
 postgres_package=postgres:$pg_major_version-alpine
 
 if [ ! -d "$config_base_location" ]; then
@@ -54,5 +54,15 @@ docker run --restart on-failure -d \
 
 #Make crontab start the script(as root) on reboot so it starts even when no one is logged in
 (crontab -l 2>/dev/null; echo "@reboot /bin/sh $config_base_location/docker_run_postgresql.sh") | crontab -
+
+# Add the postgres component to NECO
+neutron_communicator update_component add \
+    --name "PostgreSQL" \
+    --owner "_" \
+    --owner_group "_" \
+    --permissions "_" \
+    --version_file_path "$config_base_location/postgresql.version" \
+    --container_name "database_postgres" \
+    --restart_command "sudo docker container restart database_postgres"
 
 echo -e "\e[1m\e[45mPostgreSQL Installer\e[0m: Installation Complete."
